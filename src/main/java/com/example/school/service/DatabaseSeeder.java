@@ -15,7 +15,6 @@ public class DatabaseSeeder {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
 
-    @Autowired
     public DatabaseSeeder(TeacherRepository teacherRepository, StudentRepository studentRepository) {
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;

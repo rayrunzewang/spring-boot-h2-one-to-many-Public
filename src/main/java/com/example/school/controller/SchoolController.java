@@ -1,7 +1,5 @@
 package com.example.school.controller;
 
-import com.example.school.entity.Student;
-import com.example.school.entity.Teacher;
 import com.example.school.dto.TeacherDTO;
 import com.example.school.dto.StudentDTO;
 import com.example.school.service.SchoolService;
@@ -9,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Set;
 
 @RestController
@@ -23,7 +22,7 @@ public class SchoolController {
             @PathVariable Long teacherId,
             @RequestBody StudentDTO studentDTO) {
         TeacherDTO updatedTeacherDTO = schoolService.addStudentToTeacher(teacherId, studentDTO);
-        return ResponseEntity.status(201).body(updatedTeacherDTO);
+        return ResponseEntity.created(URI.create("/school/teacher/" + teacherId)).body(updatedTeacherDTO);
     }
 
     @PostMapping("/student/{studentId}/addTeacher")
@@ -31,9 +30,8 @@ public class SchoolController {
             @PathVariable Long studentId, 
             @RequestBody TeacherDTO teacherDTO) {
         StudentDTO updatedStudentDTO = schoolService.addTeacherToStudent(studentId, teacherDTO);
-        return ResponseEntity.status(201).body(updatedStudentDTO);
+        return ResponseEntity.created(URI.create("/school/student/" + studentId)).body(updatedStudentDTO);
     }
-
 
     @GetMapping("/teacher/{teacherId}/students")
     public ResponseEntity<Set<StudentDTO>> getStudentsByTeacher(@PathVariable Long teacherId) {

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,11 +11,15 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE) 
+@ToString(exclude = "students") 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) 
 @Table(name = "teachers")
 public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include 
     private Long id;
 
     @Column(nullable = false)
@@ -30,26 +33,27 @@ public class Teacher {
     )
     private Set<Student> students = new HashSet<>();
 
+    public static Teacher of(String name) {
+        return new Teacher(null, name, new HashSet<>());
+    }
+
     public void addStudent(Student student) {
+        if (student == null) return;
+        if (this.students == null) {
+            this.students = new HashSet<>();
+        }
+        if (student.getTeachers() == null) {
+            student.setTeachers(new HashSet<>());
+        }
         this.students.add(student);
-        student.getTeachers().add(this); 
+        student.getTeachers().add(this);
     }
 
     public void removeStudent(Student student) {
+        if (student == null || this.students == null) return;
         this.students.remove(student);
-        student.getTeachers().remove(this); 
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Teacher)) return false;
-        Teacher teacher = (Teacher) o;
-        return Objects.equals(id, teacher.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+        if (student.getTeachers() != null) {
+            student.getTeachers().remove(this);
+        }
     }
 }

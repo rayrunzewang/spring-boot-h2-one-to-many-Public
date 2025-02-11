@@ -1,17 +1,21 @@
 package com.example.school.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Set;
 
 @Getter
 @Setter
-public class StudentDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode
+public class StudentDTO implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     private Long id;
     private String name;
-    private Set<Long> teacherIds; // 只传递教师的 ID，而不是嵌套的教师对象
-
-    // Constructors, getters, and setters if needed
+    private Set<Long> teachers;
 }
